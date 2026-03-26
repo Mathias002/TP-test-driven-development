@@ -21,25 +21,44 @@ export function evaluateBestHand(
     {} as Record<number, Card[]>,
   );
 
+  // Rangs ayant 3 cartes
+  const tripsRanks = Object.keys(groups)
+    .map(Number)
+    .filter((rank) => groups[rank].length === 3)
+    .sort((a, b) => b - a);
+
+  // Brelan
+  if (tripsRanks.length > 0) {
+    const trip = groups[tripsRanks[0]];
+    const others = allCards
+      .filter((c) => c.rank !== tripsRanks[0])
+      .sort((a, b) => b.rank - a.rank);
+
+    return {
+      category: "Three of a kind",
+      chosen5: [...trip, ...others.slice(0, 2)],
+    };
+  }
+
   // Rangs ayant exactement 2 cartes, triés par rang décroissant
   const pairRanks = Object.keys(groups)
     .map(Number)
-    .filter(rank => groups[rank].length === 2)
+    .filter((rank) => groups[rank].length === 2)
     .sort((a, b) => b - a);
 
   // Deux paires
   if (pairRanks.length >= 2) {
     const highPair = groups[pairRanks[0]];
     const lowPair = groups[pairRanks[1]];
-    
+
     const usedCards = [...highPair, ...lowPair];
     const kicker = allCards
-      .filter(c => !usedCards.includes(c))
+      .filter((c) => !usedCards.includes(c))
       .sort((a, b) => b.rank - a.rank)[0];
 
     return {
-      category: 'Two pair',
-      chosen5: [...highPair, ...lowPair, kicker]
+      category: "Two pair",
+      chosen5: [...highPair, ...lowPair, kicker],
     };
   }
 

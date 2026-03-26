@@ -76,13 +76,39 @@ describe("HandEvaluator", () => {
     const result = evaluateBestHand(board, holeCards);
 
     expect(result.category).toBe("Two pair");
-    // Ordre attendu : paire de valets, paire de huit, puis Ace
+    // Ordre attendu : paire de valets, paire de huit, puis As
     expect(result.chosen5.map((c) => c.rank)).toEqual([
       Rank.Jack,
       Rank.Jack,
       Rank.Eight,
       Rank.Eight,
       Rank.Ace,
+    ]);
+  });
+
+  it("should identify Three of a Kind and its two best kickers", () => {
+    const board = [
+      new Card(Rank.Nine, Suit.Spades),
+      new Card(Rank.Nine, Suit.Clubs),
+      new Card(Rank.Nine, Suit.Hearts), // Brelan de 9
+      new Card(Rank.Four, Suit.Diamonds),
+      new Card(Rank.Two, Suit.Spades),
+    ];
+    const holeCards = [
+      new Card(Rank.Ace, Suit.Clubs),
+      new Card(Rank.King, Suit.Hearts),
+    ];
+
+    const result = evaluateBestHand(board, holeCards);
+
+    expect(result.category).toBe("Three of a kind");
+    // Ordre : les trois 9, puis Ace, puis King
+    expect(result.chosen5.map((c) => c.rank)).toEqual([
+      Rank.Nine,
+      Rank.Nine,
+      Rank.Nine,
+      Rank.Ace,
+      Rank.King,
     ]);
   });
 });
