@@ -112,25 +112,55 @@ describe("HandEvaluator", () => {
     ]);
   });
 
-  it('should identify Four of a Kind and the best kicker', () => {
-  const board = [
-    new Card(Rank.Seven, Suit.Spades),
-    new Card(Rank.Seven, Suit.Clubs),
-    new Card(Rank.Seven, Suit.Hearts),
-    new Card(Rank.Seven, Suit.Diamonds), // Carré de 7
-    new Card(Rank.Two, Suit.Spades),
-  ];
-  const holeCards = [
-    new Card(Rank.Ace, Suit.Clubs),
-    new Card(Rank.Six, Suit.Hearts),
-  ];
+  it("should identify Four of a Kind and the best kicker", () => {
+    const board = [
+      new Card(Rank.Seven, Suit.Spades),
+      new Card(Rank.Seven, Suit.Clubs),
+      new Card(Rank.Seven, Suit.Hearts),
+      new Card(Rank.Seven, Suit.Diamonds), // Carré de 7
+      new Card(Rank.Two, Suit.Spades),
+    ];
+    const holeCards = [
+      new Card(Rank.Ace, Suit.Clubs),
+      new Card(Rank.Six, Suit.Hearts),
+    ];
 
-  const result = evaluateBestHand(board, holeCards);
+    const result = evaluateBestHand(board, holeCards);
 
-  expect(result.category).toBe('Four of a kind');
-  // Ordre : les quatre 7, puis l'As 
-  expect(result.chosen5.map(c => c.rank)).toEqual([
-    Rank.Seven, Rank.Seven, Rank.Seven, Rank.Seven, Rank.Ace
-  ]);
-});
+    expect(result.category).toBe("Four of a kind");
+    // Ordre : les quatre 7, puis l'As
+    expect(result.chosen5.map((c) => c.rank)).toEqual([
+      Rank.Seven,
+      Rank.Seven,
+      Rank.Seven,
+      Rank.Seven,
+      Rank.Ace,
+    ]);
+  });
+
+  it("should identify a Full House ( the best triplet and best pair)", () => {
+    const board = [
+      new Card(Rank.Ten, Suit.Spades),
+      new Card(Rank.Ten, Suit.Clubs),
+      new Card(Rank.Ten, Suit.Hearts), // Brelan de 10
+      new Card(Rank.Four, Suit.Diamonds),
+      new Card(Rank.Four, Suit.Spades), // Paire de 4
+    ];
+    const holeCards = [
+      new Card(Rank.Ace, Suit.Clubs),
+      new Card(Rank.Ace, Suit.Hearts), // Paire d'As
+    ];
+
+    const result = evaluateBestHand(board, holeCards);
+
+    expect(result.category).toBe("Full house");
+    // Ordre : Le brelan de 10, puis la paire d'As
+    expect(result.chosen5.map((c) => c.rank)).toEqual([
+      Rank.Ten,
+      Rank.Ten,
+      Rank.Ten,
+      Rank.Ace,
+      Rank.Ace,
+    ]);
+  });
 });

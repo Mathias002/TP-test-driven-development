@@ -54,6 +54,30 @@ export function evaluateBestHand(
     return { category: "Four of a kind", chosen5: [...quadCards, kicker] };
   }
 
+  // Full House
+  const hasTrip = ranksByCount[3].length > 0;
+  const hasAdditionalPair =
+    ranksByCount[2].length > 0 || ranksByCount[3].length > 1;
+
+  if (hasTrip && hasAdditionalPair) {
+    const mainTripRank = ranksByCount[3][0];
+    const tripCards = cardsByRank[mainTripRank];
+
+    // La paire peut provenir des rangs de taille 2 OU d'un autre rang de taille 3
+    const potentialPairRanks = [
+      ...ranksByCount[3].filter((r) => r !== mainTripRank),
+      ...ranksByCount[2],
+    ].sort((a, b) => b - a); // On prend la paire la plus haute
+
+    const pairRank = potentialPairRanks[0];
+    const pairCards = cardsByRank[pairRank].slice(0, 2); // On ne prend que 2 cartes
+
+    return {
+      category: "Full house",
+      chosen5: [...tripCards, ...pairCards],
+    };
+  }
+
   // Brelan
   if (ranksByCount[3].length > 0) {
     const tripRank = ranksByCount[3][0];
