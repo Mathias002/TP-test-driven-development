@@ -111,4 +111,26 @@ describe("HandEvaluator", () => {
       Rank.King,
     ]);
   });
+
+  it('should identify Four of a Kind and the best kicker', () => {
+  const board = [
+    new Card(Rank.Seven, Suit.Spades),
+    new Card(Rank.Seven, Suit.Clubs),
+    new Card(Rank.Seven, Suit.Hearts),
+    new Card(Rank.Seven, Suit.Diamonds), // Carré de 7
+    new Card(Rank.Two, Suit.Spades),
+  ];
+  const holeCards = [
+    new Card(Rank.Ace, Suit.Clubs),
+    new Card(Rank.Six, Suit.Hearts),
+  ];
+
+  const result = evaluateBestHand(board, holeCards);
+
+  expect(result.category).toBe('Four of a kind');
+  // Ordre : les quatre 7, puis l'As 
+  expect(result.chosen5.map(c => c.rank)).toEqual([
+    Rank.Seven, Rank.Seven, Rank.Seven, Rank.Seven, Rank.Ace
+  ]);
+});
 });

@@ -43,6 +43,17 @@ export function evaluateBestHand(
   const allCards = [...board, ...holeCards];
   const { cardsByRank, ranksByCount } = getHandGroups(allCards);
 
+  // Carré
+  if (ranksByCount[4].length > 0) {
+    const quadRank = ranksByCount[4][0];
+    const quadCards = cardsByRank[quadRank];
+    const kicker = allCards
+      .filter((c) => c.rank !== quadRank)
+      .sort((a, b) => b.rank - a.rank)[0];
+
+    return { category: "Four of a kind", chosen5: [...quadCards, kicker] };
+  }
+
   // Brelan
   if (ranksByCount[3].length > 0) {
     const tripRank = ranksByCount[3][0];
