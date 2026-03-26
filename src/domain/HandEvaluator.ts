@@ -78,6 +78,28 @@ export function evaluateBestHand(
     };
   }
 
+  // 3. Couleur (Flush)
+  const cardsBySuit: Record<string, Card[]> = {};
+  allCards.forEach((card) => {
+    cardsBySuit[card.suit] = cardsBySuit[card.suit] || [];
+    cardsBySuit[card.suit].push(card);
+  });
+
+  const flushSuit = Object.keys(cardsBySuit).find(
+    (suit) => cardsBySuit[suit].length >= 5,
+  );
+
+  if (flushSuit) {
+    const flushCards = cardsBySuit[flushSuit]
+      .sort((a, b) => b.rank - a.rank)
+      .slice(0, 5);
+
+    return {
+      category: "Flush",
+      chosen5: flushCards,
+    };
+  }
+
   // Brelan
   if (ranksByCount[3].length > 0) {
     const tripRank = ranksByCount[3][0];

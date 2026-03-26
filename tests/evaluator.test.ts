@@ -163,4 +163,33 @@ describe("HandEvaluator", () => {
       Rank.Ace,
     ]);
   });
+
+  it("should identify a Flush (choosing the 5 highest cards of the same suit)", () => {
+    const board = [
+      new Card(Rank.Ace, Suit.Hearts), // Coeur 1
+      new Card(Rank.King, Suit.Hearts), // Coeur 2
+      new Card(Rank.Two, Suit.Hearts), // Coeur 3
+      new Card(Rank.Jack, Suit.Hearts), // Coeur 4
+      new Card(Rank.Eight, Suit.Clubs),
+    ];
+    const holeCards = [
+      new Card(Rank.Ten, Suit.Hearts), // Coeur 5
+      new Card(Rank.Nine, Suit.Hearts), // Coeur 6
+    ];
+
+    const result = evaluateBestHand(board, holeCards);
+
+    expect(result.category).toBe("Flush");
+    // On attend : As, roi, Valet, 10, 9 de Coeur
+    expect(result.chosen5.map((c) => c.rank)).toEqual([
+      Rank.Ace,
+      Rank.King,
+      Rank.Jack,
+      Rank.Ten,
+      Rank.Nine,
+    ]);
+    // Vérification que toutes les cartes ont la même couleur
+    const allHearts = result.chosen5.every((c) => c.suit === Suit.Hearts);
+    expect(allHearts).toBe(true);
+  });
 });
