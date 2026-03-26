@@ -54,4 +54,35 @@ describe("HandEvaluator", () => {
       Rank.Six,
     ]);
   });
+
+  it("should identify Two Pair (choosing the 2 highest pairs and best kicker)", () => {
+    const board = [
+      // Paire 1 : Eight
+      new Card(Rank.Eight, Suit.Spades),
+      new Card(Rank.Eight, Suit.Hearts),
+
+      // Paire 2 : Six
+      new Card(Rank.Six, Suit.Clubs),
+      new Card(Rank.Six, Suit.Diamonds),
+
+      new Card(Rank.Ace, Suit.Spades),
+    ];
+    const holeCards = [
+      // Paire 3 : Jack -> la plus haute
+      new Card(Rank.Jack, Suit.Hearts), // Deuxième Valet -> Paire
+      new Card(Rank.Jack, Suit.Clubs), // Meilleur kicker
+    ];
+
+    const result = evaluateBestHand(board, holeCards);
+
+    expect(result.category).toBe("Two pair");
+    // Ordre attendu : paire de valets, paire de huit, puis Ace
+    expect(result.chosen5.map((c) => c.rank)).toEqual([
+      Rank.Jack,
+      Rank.Jack,
+      Rank.Eight,
+      Rank.Eight,
+      Rank.Ace,
+    ]);
+  });
 });

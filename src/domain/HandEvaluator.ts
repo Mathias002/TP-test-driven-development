@@ -21,12 +21,29 @@ export function evaluateBestHand(
     {} as Record<number, Card[]>,
   );
 
-  // Extraire les paires
+  // Rangs ayant exactement 2 cartes, triés par rang décroissant
   const pairRanks = Object.keys(groups)
     .map(Number)
-    .filter((rank) => groups[rank].length === 2)
-    .sort((a, b) => b - a); // Si il y a plusieurs paire on prend la plus haute
+    .filter(rank => groups[rank].length === 2)
+    .sort((a, b) => b - a);
 
+  // Deux paires
+  if (pairRanks.length >= 2) {
+    const highPair = groups[pairRanks[0]];
+    const lowPair = groups[pairRanks[1]];
+    
+    const usedCards = [...highPair, ...lowPair];
+    const kicker = allCards
+      .filter(c => !usedCards.includes(c))
+      .sort((a, b) => b.rank - a.rank)[0];
+
+    return {
+      category: 'Two pair',
+      chosen5: [...highPair, ...lowPair, kicker]
+    };
+  }
+
+  // Une paire
   if (pairRanks.length > 0) {
     const mainPair = groups[pairRanks[0]];
     const others = allCards
