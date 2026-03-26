@@ -100,6 +100,28 @@ export function evaluateBestHand(
     };
   }
 
+  // Suite
+  // On récupère les rangs uniques et on les trie
+  const uniqueRanks = Array.from(new Set(allCards.map((c) => c.rank))).sort(
+    (a, b) => b - a,
+  );
+
+  if (uniqueRanks.length >= 5) {
+    for (let i = 0; i <= uniqueRanks.length - 5; i++) {
+      const window = uniqueRanks.slice(i, i + 5);
+      // Si l'écart entre le premier et le dernier de la fenêtre est de 4, c'est une suite
+      if (window[0] - window[4] === 4) {
+        const straightCards = window.map(
+          (rank) => allCards.find((c) => c.rank === rank)!,
+        );
+        return {
+          category: "Straight",
+          chosen5: straightCards,
+        };
+      }
+    }
+  }
+
   // Brelan
   if (ranksByCount[3].length > 0) {
     const tripRank = ranksByCount[3][0];

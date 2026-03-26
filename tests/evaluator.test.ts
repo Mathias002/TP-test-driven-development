@@ -192,4 +192,29 @@ describe("HandEvaluator", () => {
     const allHearts = result.chosen5.every((c) => c.suit === Suit.Hearts);
     expect(allHearts).toBe(true);
   });
+
+  it("should identify a Straight (5 consecutive cards)", () => {
+    const board = [
+      new Card(Rank.Six, Suit.Spades),
+      new Card(Rank.Seven, Suit.Clubs),
+      new Card(Rank.Eight, Suit.Hearts),
+      new Card(Rank.Nine, Suit.Diamonds),
+      new Card(Rank.Two, Suit.Spades), // Pas dans la suite
+    ];
+    const holeCards = [
+      new Card(Rank.Ten, Suit.Hearts),
+      new Card(Rank.Ten, Suit.Clubs),
+    ];
+
+    const result = evaluateBestHand(board, holeCards);
+
+    expect(result.category).toBe("Straight");
+    expect(result.chosen5.map((c) => c.rank)).toEqual([
+      Rank.Ten,
+      Rank.Nine,
+      Rank.Eight,
+      Rank.Seven,
+      Rank.Six,
+    ]);
+  });
 });
